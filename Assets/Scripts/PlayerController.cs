@@ -14,10 +14,12 @@ public class PlayerController : MonoBehaviour
     private float deltaY;
     private float topBound = -0.6f;
     private float botBound = -3.5f;
+    private Animator _anim;
     // Start is called before the first frame update
     void Start()
     {
         _body = GetComponent<Rigidbody2D>();
+        _anim = GetComponent<Animator>();
         currentHP = maxHP;
         //healthBar.SetMaxHealth(maxHP);
     }
@@ -26,6 +28,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         MovePlayer();
+        MovmentAnimation();
         playerDeath();
     }
 
@@ -44,6 +47,17 @@ public class PlayerController : MonoBehaviour
         {
             transform.position = new Vector2(transform.position.x, botBound);
         }
+    }
+
+    void MovmentAnimation()
+    {
+        _anim.SetFloat("speed", Mathf.Abs(deltaX + deltaY));
+        if (!Mathf.Approximately(deltaX, 0))
+        {
+            transform.localScale = new Vector2(Mathf.Sign(deltaX) * 3, 3);
+        }
+
+        //_anim.SetFloat("impulse", Mathf.Abs(_body.velocity.y));
     }
 
     void playerDeath()
