@@ -6,6 +6,14 @@ TagManager:
   tags:
   - Left arm
   - Right arm
+  - Weak enemy left arm
+  - Weak enemy right arm
+  - Normal enemy left arm
+  - Normal enemy right arm
+  - Strong enemy left arm
+  - Strong enemy right arm
+  - Boss enemy left arm
+  - Boss enemy right arm
   layers:
   - Default
   - TransparentFX

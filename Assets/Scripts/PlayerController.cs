@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
     public GameObject leftArm;
     public GameObject rightArm;
 
-    //public HealthBar healthBar;
+    public HealthBar healthBar;
 
     private float deltaX;
     private float deltaY;
@@ -20,15 +20,16 @@ public class PlayerController : MonoBehaviour
     private float botBound = -3.5f;
     private bool isPunching = false;
 
-
+    private AudioSource impact;
     private Animator _anim;
     // Start is called before the first frame update
     void Start()
     {
+        impact = GetComponent<AudioSource>();
         _body = GetComponent<Rigidbody2D>();
         _anim = GetComponent<Animator>();
         currentHP = maxHP;
-        //healthBar.SetMaxHealth(maxHP);
+        healthBar.SetMaxHealth(maxHP);
     }
 
     // Update is called once per frame
@@ -103,13 +104,9 @@ public class PlayerController : MonoBehaviour
     {
         isPunching = true;
         _anim.SetBool("isLightPunchButtonPressed", true);
+        impact.Play();
         yield return new WaitForSeconds(0.06f);
         leftArm.SetActive(true);
-
-        //if (!Mathf.Approximately(deltaX, 0))
-        //{
-        //    transform.localScale = new Vector2(Mathf.Sign(deltaX) * 3, 3);
-        //}
 
         yield return new WaitForSeconds(0.04f);
 
@@ -125,12 +122,8 @@ public class PlayerController : MonoBehaviour
         isPunching = true;
         _anim.SetBool("isHeavyPunchButtonPressed", true);
         yield return new WaitForSeconds(0.5f);
+        impact.Play();
         rightArm.SetActive(true);
-
-        //if (!Mathf.Approximately(deltaX, 0))
-        //{
-        //    transform.localScale = new Vector2(Mathf.Sign(deltaX) * 3, 3);
-        //}
 
         yield return new WaitForSeconds(0.3f);
 
@@ -141,14 +134,56 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Heavy punch");
     }
 
-    //private void OnCollisionEnter2D(Collision2D collision)
-    //{
-    //    if (collision.gameObject.CompareTag("Enemy arm"))
-    //    {
-    //        currentHP -= 1;
-    //        //healthBar.SetHealth(currentHP);
-    //    }
-    //}
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Weak enemy left arm"))
+        {
+            currentHP -= 1;
+            healthBar.SetHealth(currentHP);
+        }
+
+        else if(collision.gameObject.CompareTag("Weak enemy right arm"))
+        {
+            currentHP -= 2;
+            healthBar.SetHealth(currentHP);
+        }
+
+        else if (collision.gameObject.CompareTag("Normal enemy left arm"))
+        {
+            currentHP -= 1;
+            healthBar.SetHealth(currentHP);
+        }
+
+        else if (collision.gameObject.CompareTag("Normal enemy right arm"))
+        {
+            currentHP -= 3;
+            healthBar.SetHealth(currentHP);
+        }
+
+        else if (collision.gameObject.CompareTag("Strong enemy left arm"))
+        {
+            currentHP -= 2;
+            healthBar.SetHealth(currentHP);
+        }
+
+        else if (collision.gameObject.CompareTag("Strong enemy right arm"))
+        {
+            currentHP -= 4;
+            healthBar.SetHealth(currentHP);
+        }
+
+        else if (collision.gameObject.CompareTag("Boss enemy left arm"))
+        {
+            currentHP -= 3;
+            healthBar.SetHealth(currentHP);
+        }
+
+        else if (collision.gameObject.CompareTag("Boss enemy right arm"))
+        {
+            currentHP -= 5;
+            healthBar.SetHealth(currentHP);
+        }
+    }
 
     void playerDeath()
     {
